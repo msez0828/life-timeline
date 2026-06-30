@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>인생 타임라인 · Life Timeline</title>
+  <meta name="description" content="생년월일 기반 100년치 인생 캘린더. 인생 진척도를 보고 주간 일정을 관리하세요." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- ===== 좌측: 인생 지도(미니맵) ===== -->
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="dot"></span>
+        <h1>인생 타임라인</h1>
+        <button id="btnSettings" class="icon-btn" title="설정" aria-label="설정">⚙</button>
+      </div>
+      <p class="tagline">오늘 하루도 인생의 소중한 한 칸입니다.</p>
+
+      <div class="progress">
+        <div class="progress-head">
+          <span id="progressPct" class="pct">0%</span>
+          <span id="progressMeta" class="meta">생년월일을 설정해 주세요</span>
+        </div>
+        <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+      </div>
+
+      <div class="map-wrap">
+        <canvas id="stage"></canvas>
+      </div>
+
+      <div class="legend">
+        <span class="lg"><span class="box" style="background:#2b2d31"></span>지나온 주</span>
+        <span class="lg"><span class="box" style="background:#4f46e5"></span>이번 주</span>
+        <span class="lg"><span class="box" style="background:#f4f4f6;border:1px solid #e1e1e6"></span>미래</span>
+        <span class="lg"><span class="box dotbox"></span>일정 있음</span>
+      </div>
+
+      <div class="upcoming-block">
+        <h3 class="panel-label">다가오는 일정</h3>
+        <ul id="upcomingList" class="event-list upcoming"></ul>
+      </div>
+    </aside>
+
+    <!-- ===== 중앙: 선택한 주의 달력 + 일정 ===== -->
+    <main class="main">
+      <div class="week-head">
+        <button id="prevWeek" class="nav-btn" aria-label="이전 주">‹</button>
+        <div class="week-title">
+          <h2 id="selTitle">주를 선택하세요</h2>
+          <p id="selRange" class="sel-range"></p>
+        </div>
+        <button id="nextWeek" class="nav-btn" aria-label="다음 주">›</button>
+        <button id="btnToday" class="ctl">오늘</button>
+      </div>
+
+      <!-- 전주 미리보기 (윗줄) -->
+      <div id="weekPrev" class="week-mini"></div>
+
+      <!-- 이번주 라벨 (강조) -->
+      <div id="weekCurrentLabel" class="current-label"></div>
+
+      <!-- 현재 선택한 주 (편집 가능) -->
+      <div class="week-cal">
+        <div id="weekDays" class="week-days"></div>
+        <div id="weekBody" class="week-body"></div>
+      </div>
+
+      <!-- 다음주 미리보기 (밑줄) -->
+      <div id="weekNext" class="week-mini"></div>
+
+      <!-- 일정 작성 영역: 칩을 만들어 날짜 칸으로 드래그 -->
+      <div class="composer">
+        <h3 class="panel-label">일정 만들기</h3>
+        <div class="composer-row">
+          <input type="text" id="composeTitle" class="field" placeholder="일정 제목을 입력하세요" maxlength="80" />
+          <div class="swatches" id="evSwatches" title="일정 색상"></div>
+        </div>
+        <div id="composeChip" class="compose-chip">제목을 입력하세요</div>
+        <p class="composer-hint">위 칩을 끌어서 위 달력의 날짜 칸에 놓으면 일정이 추가됩니다. 같은 일정을 이웃한 날에 연달아 놓으면 하나의 막대로 이어집니다. (달력의 막대도 끌어서 다른 날로 옮길 수 있어요.)</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- 설정 / 온보딩 모달 -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-card">
+      <h2 id="modalTitle">시작하기</h2>
+      <p class="modal-sub">생년월일을 입력하면 당신의 인생 캘린더가 그려집니다.</p>
+      <label class="modal-field">
+        <span>생년월일</span>
+        <input type="date" id="setBirth" required />
+      </label>
+      <label class="modal-field">
+        <span>기대 수명 (년)</span>
+        <input type="number" id="setLifespan" min="1" max="120" step="1" value="90" />
+      </label>
+      <div class="modal-actions">
+        <button id="modalSave" class="btn-primary">저장</button>
+        <button id="modalCancel" class="btn-ghost hidden">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
